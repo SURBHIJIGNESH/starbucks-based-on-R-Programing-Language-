@@ -1,0 +1,179 @@
+---
+title: "DAB501 Final Project"
+output:
+  html_notebook: default
+  pdf_document: default
+---
+
+## Student Information
+
+- Name: Surbhi Patel
+- ID: 0794150
+
+
+## Instructions 
+
+Follow the instructions on the handout provided. 
+
+
+## Packages and Data
+
+```{r}
+library(tidyverse)
+library(here)
+```
+
+```{r}
+# Replace the _____ with the correct file name
+df <- read_csv(here('starbucks.csv'))
+```
+
+
+## MODELING: First pair of variables
+
+### Question 1
+
+Fat is the explanatory variable and it is on the x-axis.
+
+### Question 2
+
+Calories is the response variable and it is on the y-axis.
+
+### Question 3
+
+```{r}
+m1 <- lm(calories~fat,data=df)
+summary(m1)
+
+```
+
+### Question 4
+
+The equation is calories^ = (Y-intercept) + (Slope)*fat
+
+Here Y-intercept = (183.734) and Slope = 11.267.
+
+Equation: \(\hat{\rm calories} = 183.734 + 11.267*{\rm fat}\)
+
+
+### Question 5
+
+The intercept shows the value of the calories in the food items when values of fat in food item is equal to zero.  
+
+### Question 6
+
+There is a meaning to the intercept because in this model, regression line is cross to the y-axis and it also equal to zero. 
+
+### Question 7
+
+A slope of 11.267 means that values of fat in food items, on average, a food item will have 11.267 more fat.
+
+## MODELING: Second pair of variables
+
+### Question 1
+
+Carb is the explanatory variable and it is on the x-axis.
+
+### Question 2
+
+Calories is the response variable and it is on the y-axis.
+
+### Question 3
+
+```{r}
+m2 <- lm(calories~carb,data=df)
+summary(m2)
+```
+
+### Question 4
+
+The equation is calories^ = (Y-intercept) + (Slope)*carb
+
+Here Y-intercept = (146.0204) and Slope = 4.2971.
+
+Equation: \(\hat{\rm calories} = 146.0204 + 4.2971*{\rm carb}\)
+
+### Question 5
+
+The intercept shows the value of the calories in the food items when the values of carb in the food items is equal to zero.
+
+### Question 6
+
+There is no meaning to the intercept because in this model, regression line is only equal to zero.
+
+### Question 7
+
+A slope of 4.2971 means that values of carb in food items, on average, a food item will have 4.2971 more carb.
+
+## MODEL ASSESSMENT
+
+### Question 1
+
+Multiple R-squared metric is used to choose between the two models created.
+
+### Question 2
+
+R-squared is a statistical measure in a regression model and the values of R-squared indicates accuracy of the data matches to the regression model. The values of R-squared is in between 0 and 1. If R-squared value is higher, our model is best fit in the observation.
+
+R-squared metric is good for comparing models because it gives proper accuracy to the model. 
+
+### Question 3
+
+According to this metric, model-1(calories~fat) is the best as compared to model-2(calories~card) because in model 1, a value of multiple R-squared is higher than model 2.
+
+## MODEL DIAGNOSTICS
+
+### Question 1
+
+```{r}
+df_mod<-df %>% mutate(pred_calories = 183.734 + 11.267*fat, residuals = calories-pred_calories)
+
+df_mod
+```
+### Question 2
+
+```{r}
+ggplot(df_mod,aes(x=fat,y=residuals))+
+geom_point()+
+  geom_hline(yintercept = 0, colour='red')+theme_dark()
+```
+
+- If there is pattern in residual plot, linearity condition is not met.
+
+- If there is no apparent patter, linearity is met
+
+There is no apparent pattern in the residuals plot so this condition met. This indicates linearity of the relationship between fat and calories.
+
+### Question 3
+
+```{r}
+ggplot(df_mod, aes(x=residuals))+
+
+ geom_histogram(fill='lightyellow',color='black',binwidth=45,alpha=5,size=1.070)
+```
+The histogram is unimodal, and appears to be symmetric, the shape of the residuals are as a result of normal random variations. That is, the residuals appear to be nearly normal so this condition is met.
+
+### Question 4
+
+```{r}
+ggplot(df_mod, aes(x=fat, y=residuals))+
+
+ geom_point()+
+
+ geom_hline(yintercept=0)+
+
+ geom_hline(yintercept=100, colour='maroon')+
+
+ geom_hline(yintercept=-100, colour='maroon')
+```
+
+Since all the residuals are basically contained within the 2 horizontal lines and do not seem to be getting closer to 0 or farther away as fat increases, or have any obvious pattern that changes the variability as we increase fat, it seems like the condition of constant variability has also been met.
+
+## CONCLUSION
+
+### Question 1
+
+Based on the results of the “Model Diagnostics” section above, it is concluded that the condition met in all three assumption namely linear, nearly normal residuals, and constant variability. So this model is the best fit for our criteria and also this model has a good accuracy.
+
+
+
